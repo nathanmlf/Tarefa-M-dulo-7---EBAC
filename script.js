@@ -1,43 +1,55 @@
-//Receber um valor inserido pelo usuário para calcular o tempo no estacionamento.
-
-class CalcularValor {
-  constructor() {
+class Parquimetro {
+  constructor(valorPago) {
+    this.valorPago = valorPago;
     this.tempo = 0;
-    this.troco = 0;
+    this.valorPagar = 0;
     this._valorMinimo = 1.0;
     this._valorMáximo = 3.0;
   }
+
   calcular() {
-    const valorPago = parseFloat(
-      document.getElementById("valorPago").value
-    ).toFixed(2);
-    console.log(valorPago);
-
-    if (valorPago < this._valorMinimo) {
+    if (this.valorPago < this._valorMinimo) {
       alert("Valor insuficiente");
+      return;
     }
 
-    if (valorPago <= 1) {
+    if (this.valorPago >= 1 && this.valorPago < 1.75) {
+      this.valorPagar = 1;
       this.tempo = 30;
-      this.mostrarResultados();
-    }
-    if (valorPago == 1.75) {
+    } else if (this.valorPago >= 1.75 && this.valorPago < 3) {
+      this.valorPagar = 1.75;
       this.tempo = 60;
-    }
-    if (valorPago > 1.75) {
+    } else if (this.valorPago >= 3.0) {
+      this.valorPagar = 3.0;
       this.tempo = 120;
     }
+
+    this.mostrarResultados();
+    console.log(this.valorPagar);
+    console.log(this.valorPago);
   }
 
-  mostrarResultados(tempo, troco) {
+  mostrarResultados() {
     document.getElementById(
       "tempoEstacionado"
-    ).textContent = `Tempo estacionado: R$ ${tempo}`;
-    document.getElementById("troco").textContent = `Troco: R$ ${troco}`;
+    ).textContent = `Tempo estacionado: ${this.tempo} minutos`;
+    document.getElementById("troco").textContent = `Troco: R$ ${
+      this.valorPago - this.valorPagar
+    }`;
   }
 }
 
-const calcularValor = new CalcularValor();
+document.getElementById("botaoCalcular").addEventListener("click", () => {
+  let valorPago = parseFloat(
+    document.getElementById("valorPago").value
+  ).toFixed(2);
+  console.log(valorPago);
+  if (!isNaN(valorPago)) {
+    const parquimetro = new Parquimetro(valorPago);
+    parquimetro.calcular();
+  }
+});
 
-/* Exibir uma mensagem de "Valor insuficiente" caso o valor seja menor que R$1,00 
-Calcular e exibir o tempo correspondente e o troco (se houver). */
+// botaoCalcular
+
+// Calcular e exibir o tempo correspondente e o troco (se houver).
